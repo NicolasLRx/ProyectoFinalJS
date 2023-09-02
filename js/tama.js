@@ -41,7 +41,7 @@ Ingrese la opción deseada
         console.log( nombre+ " se siente un poco mejor!")
       break         
       case 0:
-         console.log(`Gracias por utilizar nuestra app. Saludos!`)
+         console.log(`Gracias por jugar con` +nombre+`! Saludos!`)
          salirMenu = true
       break   
       default:
@@ -91,10 +91,11 @@ function alimentar(){
           break     
           
           case 0:
+            console.log("Volviendo al menu anterior.");
           break   
         
           default:
-             console.log("Opción no válida, ingrese alguna presente en el menu")
+             console.log("Opción no válida, ingrese alguna presente en el menu");
              alimentar();
           break
        }
@@ -205,7 +206,7 @@ function jugar() {
      if(contH==3){
       console.log("A "+nombre+" no le gusta perder! Se pone de mal humor!");
       humor--;
-      contH ==0;
+      contH =0;
      }
 
    } while (opcUsuario !== 0);
