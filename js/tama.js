@@ -1,62 +1,46 @@
-let salirMenu = false;
-let nombre = "";
-let saciedad = 5; // 5 es sin hambre
+
 let h = 0;
-let humor = 5; // 5 es sin humor, abajo es aburrido, arriba diverdido
-let salud = 5; // 5 es saludable
 let contHambre=0; // contador para cantidad de veces que come comida saludable, si es mayor a 3 suma salud y vuelve a 0.
 
-alert("Bienvenido a Tamagochi!");
+class Tamagochi{
 
-nombre = prompt("Elijamos un nombre : ");
-nombre = nombre.toUpperCase();
-console.log("Bienvenido : "+ nombre);
-
-
-
-do{
-  estadoGral();
-let opcionIngresada = parseInt(prompt(`
-
-Estado de `+ nombre + `
-Saciedad : ` + saciedad+`
-Humor: `+humor+`
-Salud: `+salud+`
-
-Ingrese la opción deseada
-   1 - Alimentar
-   2 - Jugar
-   3 - Curar
-   0 - Salir del menu`))
-   switch(opcionIngresada){
-      case 1:
-        alimentar();
-         
-      break
-      case 2:
-        jugar();
-      break
-      case 3:
-         salud++;
-        console.log( nombre+ " se siente un poco mejor!")
-      break         
-      case 0:
-         console.log(`Gracias por jugar con` +nombre+`! Saludos!`)
-         salirMenu = true
-      break   
-      default:
-         console.log("Opción no válida, ingrese alguna presente en el menu")
-      break
+   constructor(nombre){
+      this.nombre = nombre;
+      this.saciedad = 5; //5 es sin hambre
+      this.humor = 5; // 5 es sin humor, abajo es aburrido, arriba divertido
+      this.salud =5; // 5 es saludable
+      this.baul =0;
    }
-}while(!salirMenu)
+
+   controlarEstado(){
+      
+      if(this.saciedad == 0 || this.humor == 0 || this.salud == 0){
+         alert (this.nombre + " necesita atencion!");
+      }
+   }
+
+
+   estado(){
+      let estado = `Estado de  ${this.nombre}
+      Apetito =  ${this.saciedad}         Humor   =  ${this.humor}
+      Salud   =  ${this.salud}            Baull   =  ${this.baul}`
+      
+      return  estado;
+   }
+
+
+}
+
+class Juguete{
+   
+}
 
 
 function alimentar(){
-
-  
+      
     let comida=0;
     let opcAlim = parseInt(prompt(`
-
+    
     Que puede comer? 
     Ingrese la opción deseada
        1 - Frutas
@@ -68,25 +52,25 @@ function alimentar(){
        switch(opcAlim){
           case 1:
             comida=1;
-            console.log(comer(comida));
+            alert(comer(comida));
             
              
           break
           case 2:
             comida=2;
-            console.log(comer(comida));
+            alert(comer(comida));
            
 
           break
           case 3:
             comida=3;
-            console.log(comer(comida));
+            alert(comer(comida));
            
            break         
 
           case 4: 
           comida=4;
-          console.log(comer(comida));
+          alert(comer(comida));
          // Capola es veneno segun mi hijo, ja.
           break     
           
@@ -219,6 +203,7 @@ function jugar() {
   return aleatorio;
  }
 
+
  function eleccion(t){
    let tipo = "";
 
@@ -231,9 +216,53 @@ function jugar() {
    }
    return tipo;
  }
+
+
+function menuOpcines(){
+   let salirMenu = false;
+      do{
+         tama.controlarEstado();
+         let est = tama.estado();
+         let opcionIngresada = parseInt(prompt(`${est}
+                  Ingrese la opción deseada
+                     1 - Alimentar
+                     2 - Jugar
+                     3 - Curar
+                     0 - Salir del menu`))
+         switch(opcionIngresada){
+               case 1:
+                  alimentar();
+                  
+               break
+               case 2:
+                  jugar();
+               break
+               case 3:
+                  salud++;
+                  console.log( nombre+ " se siente un poco mejor!")
+               break         
+               case 0:
+                  console.log(`Gracias por jugar con` +nombre+`! Saludos!`)
+                  salirMenu = true
+               break   
+               default:
+                  console.log("Opción no válida, ingrese alguna presente en el menu")
+               break
+           }
+     }while(!salirMenu)
+}
  
- function estadoGral(){
-   if(saciedad == 0 || humor == 0 || salud == 0){
-      console.log(nombre + " necesita atencion!");
-   }
- }
+
+
+//comienza
+alert("Bienvenido a Tamagochi!");
+let nombre = prompt("Elijamos un nombre : ");
+nombre = nombre.toUpperCase();
+
+//creo objeto
+const tama =  new Tamagochi (nombre);
+console.log("Bienvenido : "+ nombre);
+
+
+//llamo al menu
+menuOpcines();
