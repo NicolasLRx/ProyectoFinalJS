@@ -124,7 +124,7 @@ function jugar() {
    let cont = 0; // si Juega 3  sube humor y baja saciedad
    let contH=0; // si pierde 3 baja humor 
    do {
-   estadoGral();
+   tama.controlarEstado();
      let resultado = "Ganaste!";
      opcUsuario = parseInt(prompt(`
      Jueguemos - Piedra Papel, Tijera -
