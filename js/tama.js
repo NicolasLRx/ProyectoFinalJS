@@ -229,19 +229,19 @@ function jugarPpt() {
       alert(
         tama.nombre + " se esta divirtiendo, pero le da un poco de hambre!"
       );
-      tama.humor++;
-      tama.saciedad--;
+      modifStat("+", 10, "humor")
+      modifStat("-", 10, "saciedad");
       cont = 0;
     }
     if (contP == 3) {
       alert("A " + tama.nombre + " no le gusta perder! Se pone de mal humor!");
-      tama.humor--;
+      modifStat("-", 20 , "humor");
       contP = 0;
     }
     if (contG == 3) {
-      alert(tama.nombre + "Se esta divirtiendo y gano $1 !");
-      tama.humor++;
-      tama.dinero++;
+      alert(tama.nombre + "Se esta divirtiendo y gano $2 !");
+      modifStat("+", 20, "humor")
+      modifStat("+", 2 , "dinero");
       contG = 0;
     }
   } while (opcUsuario !== 0);
@@ -277,7 +277,7 @@ function jugarJuguete() {
     alert(`No se encontro el juguete`);
     jugar();
   } else {
-    modifStat("+",buscarJuguete.diversion, "humor" );
+    modifStat("+", buscarJuguete.diversion, "humor");
     alert(
       tama.nombre +
         " esta juando con " +
@@ -285,23 +285,19 @@ function jugarJuguete() {
         " y su humor subio + " +
         buscarJuguete.diversion
     );
-        
   }
   buscarJuguete.duracion--;
 
   tama.baul = tama.baul.filter((elem) => {
-   if(elem.duracion <= 0){
-      alert(`El Juguete  ${elem.nombre} se agoto y se elimino del baul.`)
+    if (elem.duracion <= 0) {
+      alert(`El Juguete  ${elem.nombre} se agoto y se elimino del baul.`);
       return false;
-   }
-      return true;
-   });
-   
-   jugar();
-  }
+    }
+    return true;
+  });
 
-
-
+  jugar();
+}
 
 function comprarJuguete() {
   let salirMenu = false;
