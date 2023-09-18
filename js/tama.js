@@ -1,3 +1,16 @@
+//DECLARO CONSTANTES A USAR.
+//variables comidas
+const fruta = 10;
+const verdura = 20;
+const carne = 30;
+const capola = 40;
+
+
+
+
+
+
+
 class Tamagochi {
   constructor(nombre) {
     this.nombre = nombre;
@@ -70,23 +83,23 @@ function alimentar() {
   switch (opcAlim) {
     case 1:
       comida = 1;
-      alert(comer(comida, 10));
+      alert(comer(comida, fruta));
 
       break;
     case 2:
       comida = 2;
-      alert(comer(comida, 20));
+      alert(comer(comida, verdura));
 
       break;
     case 3:
       comida = 3;
-      alert(comer(comida, 30));
+      alert(comer(comida, carne));
 
       break;
 
     case 4:
       comida = 4;
-      alert(comer(comida, 40));
+      alert(comer(comida, capola));
       // Capola es veneno segun mi hijo, ja.
       break;
 
@@ -100,6 +113,7 @@ function alimentar() {
       break;
   }
 }
+
 let contHambre = 0; // contador para cantidad de veces que come comida saludable, si es mayor a 3 suma salud y vuelve a 0.
 function comer(com, cant) {
   let estado = "";
