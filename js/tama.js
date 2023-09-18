@@ -296,7 +296,7 @@ function jugarJuguete() {
     return true;
   });
 
-  jugar();
+ 
 }
 
 function comprarJuguete() {
