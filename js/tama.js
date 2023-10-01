@@ -68,21 +68,22 @@ const btnCurar = document.getElementById("btnCurar");
 //EVENTOS
 
 if (btnVolverIndex) {
-  btnVolverIndexbtnVolverIndex.addEventListener(
+  btnVolverIndex.addEventListener(
     "click",
     () => (window.location.href = "tamagochi.html")
   );
 }
-document.addEventListener("DOMContentLoaded", function () {
-  // Inicializa el popover de Bootstrap
-  const popover = new bootstrap.Popover(btnCurar);
+if (btnCurar) {
+  document.addEventListener("DOMContentLoaded", function () {
+    // Inicializa el popover de Bootstrap
+    const popover = new bootstrap.Popover(btnCurar);
 
-  // Agrega un evento para capturar el cierre del popover
-  btnCurar.addEventListener("hidden.bs.popover", function () {
-    // Aquí puedes realizar otras acciones después de que se cierre el popover
+    // Agrega un evento para capturar el cierre del popover
+    btnCurar.addEventListener("hidden.bs.popover", function () {
+      // Aquí puedes realizar otras acciones después de que se cierre el popover
+    });
   });
-});
-
+}
 //FUNCTIONS
 function alimentar() {
   let comida = 0;

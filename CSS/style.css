@@ -15,3 +15,8 @@ body{
    --bs-popover-body-padding-x: 20px;
    --bs-popover-body-padding-y: 50px;
   }
+
+  .progress{
+    height: 50px;
+    margin-bottom: 10px;
+  }
