@@ -4,12 +4,7 @@ const fruta = 10;
 const verdura = 20;
 const carne = 30;
 const capola = 40;
-
-
-
-
-
-
+let tama;
 
 class Tamagochi {
   constructor(nombre) {
@@ -66,6 +61,29 @@ class Juguete {
   }
 }
 
+//CAPTURAS DE DOM
+const btnVolverIndex = document.getElementById("menuPrincipal");
+const btnCurar = document.getElementById("btnCurar");
+
+//EVENTOS
+
+if (btnVolverIndex) {
+  btnVolverIndexbtnVolverIndex.addEventListener(
+    "click",
+    () => (window.location.href = "tamagochi.html")
+  );
+}
+document.addEventListener("DOMContentLoaded", function () {
+  // Inicializa el popover de Bootstrap
+  const popover = new bootstrap.Popover(btnCurar);
+
+  // Agrega un evento para capturar el cierre del popover
+  btnCurar.addEventListener("hidden.bs.popover", function () {
+    // Aquí puedes realizar otras acciones después de que se cierre el popover
+  });
+});
+
+//FUNCTIONS
 function alimentar() {
   let comida = 0;
   let opcAlim = parseInt(
@@ -243,19 +261,19 @@ function jugarPpt() {
       alert(
         tama.nombre + " se esta divirtiendo, pero le da un poco de hambre!"
       );
-      modifStat("+", 10, "humor")
+      modifStat("+", 10, "humor");
       modifStat("-", 10, "saciedad");
       cont = 0;
     }
     if (contP == 3) {
       alert("A " + tama.nombre + " no le gusta perder! Se pone de mal humor!");
-      modifStat("-", 20 , "humor");
+      modifStat("-", 20, "humor");
       contP = 0;
     }
     if (contG == 3) {
       alert(tama.nombre + "Se esta divirtiendo y gano $2 !");
-      modifStat("+", 20, "humor")
-      modifStat("+", 2 , "dinero");
+      modifStat("+", 20, "humor");
+      modifStat("+", 2, "dinero");
       contG = 0;
     }
   } while (opcUsuario !== 0);
@@ -309,8 +327,6 @@ function jugarJuguete() {
     }
     return true;
   });
-
- 
 }
 
 function comprarJuguete() {
@@ -431,7 +447,7 @@ function menuOpcines() {
 }
 
 //comienza
-alert("Bienvenido a Tamagochi!");
+/* alert("Bienvenido a Tamagochi!");
 let nombre = prompt("Elijamos un nombre : ");
 nombre = nombre.toUpperCase();
 
@@ -442,3 +458,4 @@ alert("Bienvenido : " + tama.nombre);
 //llamo al menu
 
 menuOpcines();
+ */
