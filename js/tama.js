@@ -75,25 +75,6 @@ const nombreTamaInput = document.getElementById("nombreTama");
 
 
 
-
-// STORAGE
-
-
-// Recuperar el objeto tama del localStorage
-/* 
-
-// Verificar si tamaGuardado es nulo (es decir, no se encontró en el localStorage)
-if (tama !== null) {
-  // El objeto tama se ha recuperado con éxito desde el localStorage
-  // Ahora puedes trabajar con tamaGuardado como lo harías con el objeto tama original
-  console.log('Objeto tama recuperado del localStorage:', tama);
-} else {
-  // No se encontró un objeto tama en el localStorage
-  console.log('No se encontró un objeto tama en el localStorage');
-} */
-
-
-
 //EVENTOS
 if (nuevo) {
   nuevo.addEventListener("click", function () {
@@ -168,7 +149,8 @@ alimentos.forEach((alimento) => {
     } else if (valor == 4) {
       statFood = capola
     }
-
+console.log(valor)
+console.log(statFood)
     comer(valor, statFood);
   });
 });
@@ -179,10 +161,12 @@ opcUsuario.forEach((opc) => {
     const valor = opc.getAttribute("data-value");
     ganador = jugarPpt(valor);
    
-    resultadoHtml.innerHTML = `<h1 class="display-1">${ganador}</h1>`;
+        resultadoHtml.innerHTML =  `<h1 class="display-1">${ganador}</h1>`;
+
   });
 });
-   
+
+
 
 
 
@@ -355,11 +339,13 @@ function comprarJuguete() {
 }
 
 function modifStat(oper, cant, stat) {
-  
+  // Recupera el objeto tama del localStorage
+  let tama = JSON.parse(localStorage.getItem('tamagochi'));
+
+  // Verifica si se encontró un objeto tama en el localStorage
+  if (tama) {
     let nuevoValor;
-    tama = JSON.parse(localStorage.getItem('tamagochi')); 
-    tama[stat]
-    console.log()
+
     if (oper === "+") {
       nuevoValor = tama[stat] + cant;
     } else if (oper === "-") {
@@ -376,20 +362,18 @@ function modifStat(oper, cant, stat) {
       tama[stat] = nuevoValor;
     }
 
-    modificarPorcentaje(stat, tama[stat]);
+    // Guarda el objeto tama actualizado en el localStorage
+    localStorage.setItem('tamagochi', JSON.stringify(tama));
+
+   
   
-}
-
-function modificarPorcentaje(id, nuevoPorcentaje) {
-  const progress = document.getElementById(id);
-
-  if (progress) {
-    // Actualiza el atributo "aria-valuenow"
-   /*  progress.setAttribute("aria-valuenow", nuevoPorcentaje); */
-    // Actualiza el estilo de la barra de progreso
-    progress.style.width =  nuevoPorcentaje+"%";
+  } else {
+    console.log('No se encontró un objeto tama en el localStorage');
   }
 }
+
+
+
 
 
 function comprar(precio, descripcion, usos, diversion) {
