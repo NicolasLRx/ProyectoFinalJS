@@ -1,10 +1,10 @@
-//DECLARO CONSTANTES A USAR.
-//variables comidas
+ //DECLARO CONSTANTES A USAR.
 const fruta = 10;
 const verdura = 20;
 const carne = 30;
 const capola = 40;
-let tama;
+let tamago;
+let ganador;
 
 class Tamagochi {
   constructor(nombre) {
@@ -64,8 +64,80 @@ class Juguete {
 //CAPTURAS DE DOM
 const btnVolverIndex = document.getElementById("menuPrincipal");
 const btnCurar = document.getElementById("btnCurar");
+const alimentos = document.querySelectorAll(".img-fluid.alimentos");
+const h1Nombre = document.getElementById("nombreTama")
+const opcUsuario = document.querySelectorAll(".img-fluid.ppt")
+const resultadoHtml = document.getElementById("resultado")
+const nuevo = document.getElementById("nuevoAmigo")
+const continuar = document.getElementById("continuar")
+const nombreTamaInput = document.getElementById("nombreTama");
+
+
+
+
+// STORAGE
+
+
+// Recuperar el objeto tama del localStorage
+/* 
+
+// Verificar si tamaGuardado es nulo (es decir, no se encontró en el localStorage)
+if (tama !== null) {
+  // El objeto tama se ha recuperado con éxito desde el localStorage
+  // Ahora puedes trabajar con tamaGuardado como lo harías con el objeto tama original
+  console.log('Objeto tama recuperado del localStorage:', tama);
+} else {
+  // No se encontró un objeto tama en el localStorage
+  console.log('No se encontró un objeto tama en el localStorage');
+} */
+
+
 
 //EVENTOS
+if (nuevo) {
+  nuevo.addEventListener("click", function () {
+    const nombreTama = nombreTamaInput.value;
+
+   
+    if (nombreTama.trim() !== "") {
+      tamago = new Tamagochi(nombreTama);
+           
+    } else {
+      tamago = new Tamagochi("Tamito");
+  
+    }
+    localStorage.setItem('tamagochi', JSON.stringify(tamago));
+    window.location.href='./pages/tamagochi.html'
+  });
+  
+}
+
+if(continuar){
+  continuar.addEventListener("click", function(){
+
+  const tama = JSON.parse(localStorage.getItem('tamagochi')); 
+
+  if(tama!==null){
+    window.location.href='./pages/tamagochi.html'
+  }else{
+        alert("No hay una partida Guardada")
+  }
+
+ 
+
+});
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+   const mostrarNombre = document.getElementById("nombreT");
+  if (mostrarNombre) {
+    mostrarNombre.innerHTML = `<h1 class="display-1">${tamago.nombre}</h1>`;
+  }
+});
+
+
+
 
 if (btnVolverIndex) {
   btnVolverIndex.addEventListener(
@@ -84,65 +156,44 @@ if (btnCurar) {
     });
   });
 }
+
+alimentos.forEach((alimento) => {
+  alimento.addEventListener("click", () => {
+    const valor = alimento.getAttribute("data-valor");
+    let statFood;
+
+    if (valor == 1) {
+      statFood = verdura
+    } else if (valor == 2) {
+      statFood = fruta
+    } else if (valor == 3) {
+      statFood = carne
+    } else if (valor == 4) {
+      statFood = capola
+    }
+
+    comer(valor, statFood);
+  });
+});
+
+
+opcUsuario.forEach((opc) => {
+  opc.addEventListener("click", () => {
+    const valor = opc.getAttribute("data-value");
+    ganador = jugarPpt(valor);
+   
+    resultadoHtml.innerHTML = `<h1 class="display-1">${ganador}</h1>`;
+  });
+});
+   
 //FUNCTIONS
-function alimentar() {
-  let comida = 0;
-  let opcAlim = parseInt(
-    prompt(`
-    
-    Que puede comer? 
-    Ingrese la opción deseada
-       1 - Frutas
-       2 - Verduras
-       3 - Carne
-       4 - Capola 
-       0 - volver al menu anterior`)
-  );
-
-  switch (opcAlim) {
-    case 1:
-      comida = 1;
-      alert(comer(comida, fruta));
-
-      break;
-    case 2:
-      comida = 2;
-      alert(comer(comida, verdura));
-
-      break;
-    case 3:
-      comida = 3;
-      alert(comer(comida, carne));
-
-      break;
-
-    case 4:
-      comida = 4;
-      alert(comer(comida, capola));
-      // Capola es veneno segun mi hijo, ja.
-      break;
-
-    case 0:
-      console.log("Volviendo al menu anterior.");
-      break;
-
-    default:
-      console.log("Opción no válida, ingrese alguna presente en el menu");
-      alimentar();
-      break;
-  }
-}
 
 let contHambre = 0; // contador para cantidad de veces que come comida saludable, si es mayor a 3 suma salud y vuelve a 0.
 function comer(com, cant) {
-  let estado = "";
-
   if (com == 1 || com == 2 || com == 3) {
     contHambre++;
-    estado = "Ñam!";
     modifStat("+", cant, "saciedad");
   } else if (com == 4) {
-    estado = "Puajj!";
     modifStat("-", cant, "saciedad");
     modifStat("-", cant, "salud");
   }
@@ -152,112 +203,50 @@ function comer(com, cant) {
     modifStat("+", 10, "humor");
     contHambre = 0;
   }
-
-  return estado;
 }
 
-function jugar() {
-  let salirMenu = false;
-  do {
-    let est = tama.estado();
-    let opcionIngresada = parseInt(
-      prompt(`${est}
-                  ¿A que desea Jugar?
-                     1 - Piedra Papel tijera
-                     2 - Juguete
-                     0 - Salir del menu`)
-    );
-    switch (opcionIngresada) {
-      case 1:
-        jugarPpt();
-
-        break;
-      case 2:
-        jugarJuguete();
-        break;
-      case 0:
-        console.log(`Volviendo al menu anterior`);
-        salirMenu = true;
-        break;
-      default:
-        console.log("Opción no válida, ingrese alguna presente en el menu");
-        break;
-    }
-  } while (!salirMenu);
-}
-
-function jugarPpt() {
-  let opcUsuario;
-  let us = "";
-  let tam = "";
+function jugarPpt(opcUser) {
   let cont = 0; // si Juega 3  sube humor y baja saciedad
   let contP = 0; // si llega a 3 baja humor
   let contG = 0; // si gana 3 gana sube dinero
-  do {
-    tama.controlarEstado();
-    let resultado = "Ganaste!";
-    opcUsuario = parseInt(
-      prompt(`
-     Jueguemos - Piedra Papel, Tijera -
-     ¿Cuál es tu elección?   
-     1 - Piedra
-     2 - Papel
-     3 - Tijera
-     0 - Volver al menú
-     `)
-    );
-
-    if (isNaN(opcUsuario)) {
-      alert("Ingrese un valor numérico válido.");
-    } else if (opcUsuario === 0) {
-      console.log("Volviendo al menú principal.");
-    } else if (opcUsuario >= 1 && opcUsuario <= 3) {
-      cont++;
-      let opcTama = enteroAleatorio();
-      us = eleccion(opcUsuario);
+  let resultado="Ganaste!"
+  let opcTama = enteroAleatorio(); 
+    cont++;
+    
+      us = eleccion(opcUser);
       tam = eleccion(opcTama);
 
-      alert(
-        "Elegiste: " +
-          us +
-          "\n." +
-          "\n." +
-          "\n" +
-          tama.nombre +
-          " eligio : " +
-          tam
-      );
+    
 
-      if (opcUsuario == opcTama) {
+      if (us === tam) {
         resultado = "Empate!";
-      } else if (opcUsuario == 1) {
-        if (opcTama == 2) {
+      } else if (us === "Piedra") {
+        if (tam === "Papel") {
           resultado = "Gana: " + tama.nombre;
           contG++;
         } else {
           contP++;
         }
-      } else if (opcUsuario == 2) {
-        if (opcTama == 3) {
+      } else if (us === "Papel") {
+        if (tam === "Tijera") {
           resultado = "Gana: " + tama.nombre;
           contG++;
           cont;
         } else {
           contP++;
         }
-      } else if (opcUsuario == 3) {
-        if (opcTama == 1) {
+      } else if (us === "Tijera") {
+        if (tam === "Piedra") {
           resultado = "Gana: " + tama.nombre;
           contG++;
         } else {
           contP++;
         }
       }
-      alert(resultado);
-    } else {
-      alert("Ingrese una opción válida (1, 2, 3 o 0).");
-    }
 
+      
+    
+      
     if (cont == 3) {
       alert(
         tama.nombre + " se esta divirtiendo, pero le da un poco de hambre!"
@@ -277,7 +266,8 @@ function jugarPpt() {
       modifStat("+", 2, "dinero");
       contG = 0;
     }
-  } while (opcUsuario !== 0);
+
+    return resultado;
 }
 
 function enteroAleatorio() {
@@ -291,11 +281,11 @@ function eleccion(t) {
   let tipo = "";
 
   if (t == 1) {
-    tipo = "Piedra!";
+    tipo = "Piedra";
   } else if (t == 2) {
-    tipo = "Papel!";
+    tipo = "Papel";
   } else if (t == 3) {
-    tipo = "Tijera!";
+    tipo = "Tijera";
   }
   return tipo;
 }
@@ -365,32 +355,40 @@ function comprarJuguete() {
 }
 
 function modifStat(oper, cant, stat) {
-  if (tama.hasOwnProperty(stat)) {
+  
+    let nuevoValor;
+    
     if (oper === "+") {
-      let resul = tama[stat] + cant;
-
-      if (tama[stat] == 100) {
-        alert(`${stat} esta al maximo!`);
-      } else if (resul >= 100) {
-        tama[stat] = 100;
-        alert(`${stat} llego al maximo!`);
-      } else {
-        tama[stat] = resul;
-      }
+      nuevoValor = tama[stat] + cant;
     } else if (oper === "-") {
-      let resul = tama[stat] - cant;
-
-      if (resul <= 0) {
-        alert(`${stat} llego al minimo!`);
-        tama[stat] = 0;
-      } else {
-        tama[stat] = resul;
-      }
+      nuevoValor = tama[stat] - cant;
     }
-  } else {
-    console.log(`La propiedad ${stat}  no existe`);
+
+    if (nuevoValor >= 100) {
+      tama[stat] = 100;
+      alert(`${stat} llegó al máximo!`);
+    } else if (nuevoValor <= 0) {
+      tama[stat] = 0;
+      alert(`${stat} llegó al mínimo!`);
+    } else {
+      tama[stat] = nuevoValor;
+    }
+
+    modificarPorcentaje(stat, tama[stat]);
+  
+}
+
+function modificarPorcentaje(id, nuevoPorcentaje) {
+  const progress = document.getElementById(id);
+
+  if (progress) {
+    // Actualiza el atributo "aria-valuenow"
+   /*  progress.setAttribute("aria-valuenow", nuevoPorcentaje); */
+    // Actualiza el estilo de la barra de progreso
+    progress.style.width =  nuevoPorcentaje+"%";
   }
 }
+
 
 function comprar(precio, descripcion, usos, diversion) {
   if (tama.dinero < precio) {

@@ -22,29 +22,92 @@
   </head>
   <body>
     <div class="container text-center">
+      <h1 class="display-1">TAMAGOCHI</h1>
       <div class="row">
         <div class="col">
-          <h1 class="display-1">Bienvenido a Tamagochi</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <div class="d-grid gap-2 col-6 mx-auto">
-            <a href="./pages/tamagochi.html"
-              ><button class="btn btn-primary" type="button">
-                Nuevo Tama
-              </button></a
-            >
+          <div
+            class="modal fade"
+            id="exampleModalToggle"
+            aria-hidden="true"
+            aria-labelledby="exampleModalToggleLabel"
+            tabindex="-1"
+          >
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalToggleLabel">
+                    ¿Que desea hacer?
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <button
+                    class="btn btn-primary"
+                    data-bs-target="#exampleModalToggle2"
+                    data-bs-toggle="modal"
+                  >
+                    Nuevo Amigo
+                  </button>
+                  <button type="button" class="btn btn-primary" id="continuar">Continuar anterior</button>
+                </div>
+                <div class="modal-footer"></div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col">
-          <div class="d-grid gap-2 col-6 mx-auto">
-            <a href="./pages/tamagochi.html"
-              ><button class="btn btn-primary" type="button">
-                Continuar
-              </button></a
-            >
+          <div
+            class="modal fade"
+            id="exampleModalToggle2"
+            aria-hidden="true"
+            aria-labelledby="exampleModalToggleLabel2"
+            tabindex="-1"
+          >
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalToggleLabel2"> 
+                    Nuevo Amigo
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+
+                  
+                </div>
+                <div class="modal-body">
+                    <h4>Ingrese el nombre de su amigo</h4>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="nombreTama" placeholder="Tamito" aria-label="Tamito" aria-describedby="button-addon2" required>
+                        <button class="btn btn-outline-secondary" type="button" id="nuevoAmigo" >Iniciar</button>
+                      </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    class="btn btn-primary"
+                    data-bs-target="#exampleModalToggle"
+                    data-bs-toggle="modal"
+                  >
+                    volver
+                  </button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
           </div>
+          <button
+            class="btn btn-primary"
+            data-bs-target="#exampleModalToggle"
+            data-bs-toggle="modal"
+          >
+            Empecemos
+          </button>
         </div>
       </div>
     </div>
