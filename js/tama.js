@@ -1,4 +1,4 @@
- //DECLARO CONSTANTES A USAR.
+//DECLARO CONSTANTES A USAR.
 const fruta = 10;
 const verdura = 20;
 const carne = 30;
@@ -6,6 +6,9 @@ const capola = 40;
 let tamago;
 let ganador;
 let tama ;
+let cont = 0; // si Juega 3  sube humor y baja saciedad
+let contP = 0; // si llega a 3 baja humor
+let contG = 0; // si gana 3 gana sube dinero
 
 class Tamagochi {
   constructor(nombre) {
@@ -67,11 +70,11 @@ const btnVolverIndex = document.getElementById("menuPrincipal");
 const btnCurar = document.getElementById("btnCurar");
 const alimentos = document.querySelectorAll(".img-fluid.alimentos");
 const h1Nombre = document.getElementById("nombreTama")
-const opcUsuario = document.querySelectorAll(".img-fluid.ppt")
 const resultadoHtml = document.getElementById("resultado")
 const nuevo = document.getElementById("nuevoAmigo")
 const continuar = document.getElementById("continuar")
 const nombreTamaInput = document.getElementById("nombreTama");
+const opcUsuario = document.querySelectorAll(".img-fluid.ppt")
 
 
 
@@ -108,13 +111,20 @@ if(continuar){
 });
 }
 
+
+
 document.addEventListener("DOMContentLoaded", function () {
-   const mostrarNombre = document.getElementById("nombreT");
-   tama = JSON.parse(localStorage.getItem('tamagochi')); 
+  
+  const mostrarNombre = document.getElementById("nombreT");
+  tama = JSON.parse(localStorage.getItem('tamagochi')); 
   if (mostrarNombre) {
 
     mostrarNombre.innerHTML = `<h1 class="display-1">${tama.nombre}</h1>`;
   }
+
+
+
+
 });
 
 if (btnVolverIndex) {
@@ -155,19 +165,29 @@ console.log(statFood)
   });
 });
 
-
 opcUsuario.forEach((opc) => {
   opc.addEventListener("click", () => {
     const valor = opc.getAttribute("data-value");
     ganador = jugarPpt(valor);
    
-        resultadoHtml.innerHTML =  `<h1 class="display-1">${ganador}</h1>`;
-
+    resultadoHtml.innerHTML = `<h1 class="display-1">${ganador}</h1>`;
   });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
 
+  const barraDeProgresoSac = document.getElementById("saciedad");
+  const barraDeProgresoHum = document.getElementById("humor");
+  const barraDeProgresoSal = document.getElementById("salud");
 
+  const nuevoPorcentajeSac = tama.saciedad;
+  const nuevoPorcentajeHum = tama.humor;
+  const nuevoPorcentajeSal = tama.salud;
+
+   barraDeProgresoSac.querySelector(".progress-bar").style.width = `${nuevoPorcentajeSac}%`;
+  barraDeProgresoHum.querySelector(".progress-bar").style.width = `${nuevoPorcentajeHum}%`;
+  barraDeProgresoSal.querySelector(".progress-bar").style.width = `${nuevoPorcentajeSal}%`;
+});
 
 
 //FUNCTIONS
@@ -190,15 +210,14 @@ function comer(com, cant) {
 }
 
 function jugarPpt(opcUser) {
-  let cont = 0; // si Juega 3  sube humor y baja saciedad
-  let contP = 0; // si llega a 3 baja humor
-  let contG = 0; // si gana 3 gana sube dinero
+  
   let resultado="Ganaste!"
   let opcTama = enteroAleatorio(); 
+  tama = JSON.parse(localStorage.getItem('tamagochi'));
     cont++;
     
-      us = eleccion(opcUser);
-      tam = eleccion(opcTama);
+     let us = eleccion(opcUser);
+     let tam = eleccion(opcTama);
 
     
 
@@ -228,7 +247,7 @@ function jugarPpt(opcUser) {
         }
       }
 
-      
+   
     
       
     if (cont == 3) {
@@ -339,10 +358,10 @@ function comprarJuguete() {
 }
 
 function modifStat(oper, cant, stat) {
-  // Recupera el objeto tama del localStorage
+ 
   let tama = JSON.parse(localStorage.getItem('tamagochi'));
 
-  // Verifica si se encontró un objeto tama en el localStorage
+  
   if (tama) {
     let nuevoValor;
 
@@ -362,7 +381,7 @@ function modifStat(oper, cant, stat) {
       tama[stat] = nuevoValor;
     }
 
-    // Guarda el objeto tama actualizado en el localStorage
+    
     localStorage.setItem('tamagochi', JSON.stringify(tama));
 
    
@@ -371,10 +390,6 @@ function modifStat(oper, cant, stat) {
     console.log('No se encontró un objeto tama en el localStorage');
   }
 }
-
-
-
-
 
 function comprar(precio, descripcion, usos, diversion) {
   if (tama.dinero < precio) {
@@ -386,61 +401,3 @@ function comprar(precio, descripcion, usos, diversion) {
   }
 }
 
-function menuOpcines() {
-  let salirMenu = false;
-  do {
-    tama.controlarEstado();
-    if (!tama.vivo) {
-      alert("Gracias por Jugar!");
-      break;
-    } else {
-      est = tama.estado();
-      let opcionIngresada = parseInt(
-        prompt(`${est}
-                  Ingrese la opción deseada
-                     1 - Alimentar
-                     2 - Jugar
-                     3 - Curar
-                     4 - Comprar Juguete
-                     0 - Salir del menu`)
-      );
-      switch (opcionIngresada) {
-        case 1:
-          alimentar();
-
-          break;
-        case 2:
-          jugar();
-          break;
-        case 3:
-          modifStat("+", 30, "salud");
-          console.log(nombre + " se siente un poco mejor!");
-          break;
-        case 4:
-          comprarJuguete();
-          break;
-        case 0:
-          console.log(`Gracias por jugar con` + nombre + `! Saludos!`);
-          salirMenu = true;
-          break;
-        default:
-          console.log("Opción no válida, ingrese alguna presente en el menu");
-          break;
-      }
-    }
-  } while (!salirMenu);
-}
-
-//comienza
-/* alert("Bienvenido a Tamagochi!");
-let nombre = prompt("Elijamos un nombre : ");
-nombre = nombre.toUpperCase();
-
-//creo objeto
-const tama = new Tamagochi(nombre);
-alert("Bienvenido : " + tama.nombre);
-
-//llamo al menu
-
-menuOpcines();
- */
