@@ -5,6 +5,7 @@ const carne = 30;
 const capola = 40;
 let tamago;
 let ganador;
+let tama ;
 
 class Tamagochi {
   constructor(nombre) {
@@ -115,7 +116,7 @@ if (nuevo) {
 if(continuar){
   continuar.addEventListener("click", function(){
 
-  const tama = JSON.parse(localStorage.getItem('tamagochi')); 
+  tama = JSON.parse(localStorage.getItem('tamagochi')); 
 
   if(tama!==null){
     window.location.href='./pages/tamagochi.html'
@@ -123,21 +124,17 @@ if(continuar){
         alert("No hay una partida Guardada")
   }
 
- 
-
 });
 }
 
-
 document.addEventListener("DOMContentLoaded", function () {
    const mostrarNombre = document.getElementById("nombreT");
+   tama = JSON.parse(localStorage.getItem('tamagochi')); 
   if (mostrarNombre) {
-    mostrarNombre.innerHTML = `<h1 class="display-1">${tamago.nombre}</h1>`;
+
+    mostrarNombre.innerHTML = `<h1 class="display-1">${tama.nombre}</h1>`;
   }
 });
-
-
-
 
 if (btnVolverIndex) {
   btnVolverIndex.addEventListener(
@@ -186,6 +183,9 @@ opcUsuario.forEach((opc) => {
   });
 });
    
+
+
+
 //FUNCTIONS
 
 let contHambre = 0; // contador para cantidad de veces que come comida saludable, si es mayor a 3 suma salud y vuelve a 0.
@@ -357,7 +357,9 @@ function comprarJuguete() {
 function modifStat(oper, cant, stat) {
   
     let nuevoValor;
-    
+    tama = JSON.parse(localStorage.getItem('tamagochi')); 
+    tama[stat]
+    console.log()
     if (oper === "+") {
       nuevoValor = tama[stat] + cant;
     } else if (oper === "-") {
