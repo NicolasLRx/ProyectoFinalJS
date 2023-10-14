@@ -23,6 +23,8 @@ class Tamagochi {
     this.baul.push(pelota);
   }
 
+
+
   controlarEstado() {
     if (this.saciedad <= 0 || this.salud <= 0) {
       alert(this.nombre + " se Murio X.x");
@@ -99,11 +101,13 @@ if (nuevo) {
 
 if(continuar){
   continuar.addEventListener("click", function(){
-
+    let tama
   tama = JSON.parse(localStorage.getItem('tamagochi')); 
 
   if(tama!==null){
     window.location.href='./pages/tamagochi.html'
+
+
   }else{
         alert("No hay una partida Guardada")
   }
@@ -359,7 +363,7 @@ function comprarJuguete() {
 
 function modifStat(oper, cant, stat) {
  
-  let tama = JSON.parse(localStorage.getItem('tamagochi'));
+  /* let tama = JSON.parse(localStorage.getItem('tamagochi')); */
 
   
   if (tama) {
@@ -389,6 +393,8 @@ function modifStat(oper, cant, stat) {
   } else {
     console.log('No se encontró un objeto tama en el localStorage');
   }
+
+ 
 }
 
 function comprar(precio, descripcion, usos, diversion) {
