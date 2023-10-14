@@ -87,13 +87,13 @@ if (nuevo) {
 
    
     if (nombreTama.trim() !== "") {
-      tamago = new Tamagochi(nombreTama);
+      tama = new Tamagochi(nombreTama);
            
     } else {
-      tamago = new Tamagochi("Tamito");
+      tama = new Tamagochi("Tamito");
   
     }
-    localStorage.setItem('tamagochi', JSON.stringify(tamago));
+    localStorage.setItem('tamagochi', JSON.stringify(tama));
     window.location.href='./pages/tamagochi.html'
   });
   
@@ -101,20 +101,27 @@ if (nuevo) {
 
 if(continuar){
   continuar.addEventListener("click", function(){
-    let tama
-  tama = JSON.parse(localStorage.getItem('tamagochi')); 
+  let tamaGet;
+  tamaGet = JSON.parse(localStorage.getItem('tamagochi')); 
 
-  if(tama!==null){
+  if(tamaGet!==null){
     window.location.href='./pages/tamagochi.html'
-
-
+    tama = new Tamagochi (tamaGet.nombre)
+    tama.saciedad = tamaGet.saciedad
+    tama.humor = tamaGet.humor    
+    tama.salud = tamaGet.salud
+    tama.baul = tamaGet.baul
+    tama.dinero = tamaGet.dinero
+    tama.vivo = tamaGet.vivo
+  
+   
   }else{
         alert("No hay una partida Guardada")
   }
 
 });
 }
-
+console.log(tama)
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -137,15 +144,15 @@ if (btnVolverIndex) {
     () => (window.location.href = "tamagochi.html")
   );
 }
-if (btnCurar) {
-  document.addEventListener("DOMContentLoaded", function () {
-    // Inicializa el popover de Bootstrap
-    const popover = new bootstrap.Popover(btnCurar);
 
-    // Agrega un evento para capturar el cierre del popover
-    btnCurar.addEventListener("hidden.bs.popover", function () {
-      // Aquí puedes realizar otras acciones después de que se cierre el popover
-    });
+if (btnCurar) {
+  btnCurar.addEventListener("click", function () {
+    modifStat("+", 15, "salud");
+
+
+    const popover = new bootstrap.Popover(btnCurar);
+    popover.hide();
+    location.reload();
   });
 }
 
@@ -178,6 +185,7 @@ opcUsuario.forEach((opc) => {
   });
 });
 
+
 document.addEventListener("DOMContentLoaded", function () {
 
   const barraDeProgresoSac = document.getElementById("saciedad");
@@ -188,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const nuevoPorcentajeHum = tama.humor;
   const nuevoPorcentajeSal = tama.salud;
 
-   barraDeProgresoSac.querySelector(".progress-bar").style.width = `${nuevoPorcentajeSac}%`;
+  barraDeProgresoSac.querySelector(".progress-bar").style.width = `${nuevoPorcentajeSac}%`;
   barraDeProgresoHum.querySelector(".progress-bar").style.width = `${nuevoPorcentajeHum}%`;
   barraDeProgresoSal.querySelector(".progress-bar").style.width = `${nuevoPorcentajeSal}%`;
 });
