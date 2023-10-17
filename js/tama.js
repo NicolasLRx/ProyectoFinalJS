@@ -9,6 +9,7 @@ let tama ;
 let cont = 0; // si Juega 3  sube humor y baja saciedad
 let contP = 0; // si llega a 3 baja humor
 let contG = 0; // si gana 3 gana sube dinero
+let catalogoJuguete = [];
 
 class Tamagochi {
   constructor(nombre) {
@@ -19,20 +20,11 @@ class Tamagochi {
     this.baul = [];
     this.dinero = 10; // contado
     this.vivo = true;
-    let pelota = new Juguete("Pelota", Infinity, 3);
+    let pelota = new Juguete(0,"Pelota", Infinity, 5,Infinity);
     this.baul.push(pelota);
   }
 
-
-
-  controlarEstado() {
-    if (this.saciedad <= 0 || this.salud <= 0) {
-      alert(this.nombre + " se Murio X.x");
-      this.vivo = false;
-    } else if (this.saciedad <= 25 || this.humor <= 25 || this.salud <= 25) {
-      alert(this.nombre + " necesita atencion!");
-    }
-  }
+ 
 
   estado() {
     let estado = `Estado de  ${this.nombre}
@@ -55,10 +47,12 @@ class Tamagochi {
 }
 
 class Juguete {
-  constructor(nombre, duracion, diversion) {
+  constructor(id, nombre, duracion, diversion, precio) {
+    this.id = id;
     this.nombre = nombre;
     this.duracion = duracion;
     this.diversion = diversion;
+    this.precio = precio;
   }
 
   mostrarJuguete() {
@@ -77,8 +71,9 @@ const nuevo = document.getElementById("nuevoAmigo")
 const continuar = document.getElementById("continuar")
 const nombreTamaInput = document.getElementById("nombreTama");
 const opcUsuario = document.querySelectorAll(".img-fluid.ppt")
-
-
+const jugueteDom = document.getElementById("juguete")
+const btnComprar = document.getElementById("comprarJuguete")
+const eleccionTama = document.getElementById("eleccion")
 
 //EVENTOS
 if (nuevo) {
@@ -116,13 +111,16 @@ if(continuar){
   
    
   }else{
-        alert("No hay una partida Guardada")
+       
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: "No hay una partida Guardada",
+        })
   }
 
 });
 }
-console.log(tama)
-
 
 document.addEventListener("DOMContentLoaded", function () {
   
@@ -170,8 +168,6 @@ alimentos.forEach((alimento) => {
     } else if (valor == 4) {
       statFood = capola
     }
-console.log(valor)
-console.log(statFood)
     comer(valor, statFood);
   });
 });
@@ -188,6 +184,7 @@ opcUsuario.forEach((opc) => {
 
 document.addEventListener("DOMContentLoaded", function () {
 
+
   const barraDeProgresoSac = document.getElementById("saciedad");
   const barraDeProgresoHum = document.getElementById("humor");
   const barraDeProgresoSal = document.getElementById("salud");
@@ -200,6 +197,11 @@ document.addEventListener("DOMContentLoaded", function () {
   barraDeProgresoHum.querySelector(".progress-bar").style.width = `${nuevoPorcentajeHum}%`;
   barraDeProgresoSal.querySelector(".progress-bar").style.width = `${nuevoPorcentajeSal}%`;
 });
+
+
+
+
+
 
 
 //FUNCTIONS
@@ -261,25 +263,44 @@ function jugarPpt(opcUser) {
 
    
     
+  eleccionTama.innerHTML = `
+    <h1 class="display-1">${tama.nombre} eligió:</h1> 
+    <img src="../img/${tam}.png" alt="${tam}">
+  `;
       
     if (cont == 3) {
-      alert(
-        tama.nombre + " se esta divirtiendo, pero le da un poco de hambre!"
-      );
+       Swal.fire({
+        icon: 'info',
+        title: 'Iujuuu',
+        text: tama.nombre + " se esta divirtiendo, pero le da un poco de hambre!",
+      })
       modifStat("+", 10, "humor");
       modifStat("-", 10, "saciedad");
       cont = 0;
     }
     if (contP == 3) {
-      alert("A " + tama.nombre + " no le gusta perder! Se pone de mal humor!");
+      
+      Swal.fire({
+        icon: 'warning',
+        title: 'Grrrrrrrr',
+        text: "A " + tama.nombre + " no le gusta perder! Se pone de mal humor!",
+      })
+
       modifStat("-", 20, "humor");
       contP = 0;
+      contG = 0;
     }
     if (contG == 3) {
       alert(tama.nombre + "Se esta divirtiendo y gano $2 !");
+      Swal.fire({
+        icon: 'success',
+        title: '$$$$$',
+        text: tama.nombre + "Se esta divirtiendo y gano $2 !",
+      })
       modifStat("+", 20, "humor");
       modifStat("+", 2, "dinero");
       contG = 0;
+      contP = 0;
     }
 
     return resultado;
@@ -305,74 +326,7 @@ function eleccion(t) {
   return tipo;
 }
 
-function jugarJuguete() {
-  let opcE = prompt(tama.mostrarBaul() + "\n Que Juguete desea elegir?");
-  let buscarJuguete = tama.baul.find((elem) => {
-    return elem.nombre.toLowerCase() == opcE.toLocaleLowerCase();
-  });
-
-  if (buscarJuguete == undefined) {
-    alert(`No se encontro el juguete`);
-    jugar();
-  } else {
-    modifStat("+", buscarJuguete.diversion, "humor");
-    alert(
-      tama.nombre +
-        " esta juando con " +
-        buscarJuguete.nombre +
-        " y su humor subio + " +
-        buscarJuguete.diversion
-    );
-  }
-  buscarJuguete.duracion--;
-
-  tama.baul = tama.baul.filter((elem) => {
-    if (elem.duracion <= 0) {
-      alert(`El Juguete  ${elem.nombre} se agoto y se elimino del baul.`);
-      return false;
-    }
-    return true;
-  });
-}
-
-function comprarJuguete() {
-  let salirMenu = false;
-  let jug;
-  do {
-    let opcionIngresada = parseInt(
-      prompt(`Bienvenido a la tienda de juguetes ${tama.nombre}
-                   
-                     ¿Que juguete desea comprar?
-                      1 - Plastilina   ($1)  Usos 1
-                      2 - Libro        ($5)  Usos 10
-                      3 - Bicicleta    ($10) Usos 15
-                      0 - Salir del menu`)
-    );
-    switch (opcionIngresada) {
-      case 1:
-        comprar(1, "Plastilina", 1, 10);
-        break;
-      case 2:
-        comprar(5, "Libro", 10, 30);
-        break;
-      case 3:
-        comprar(10, "Bicicleta", 15, 40);
-        break;
-      case 0:
-        console.log(`Volviendo al menu anterior`);
-        salirMenu = true;
-        break;
-      default:
-        console.log("Opción no válida, ingrese alguna presente en el menu");
-        break;
-    }
-  } while (!salirMenu);
-}
-
 function modifStat(oper, cant, stat) {
- 
-  /* let tama = JSON.parse(localStorage.getItem('tamagochi')); */
-
   
   if (tama) {
     let nuevoValor;
@@ -382,20 +336,45 @@ function modifStat(oper, cant, stat) {
     } else if (oper === "-") {
       nuevoValor = tama[stat] - cant;
     }
+    Toastify({
+      text: `${stat} ${oper} ${cant}`,
+      duration: 3000,
+      gravity: "top", // `top` or `bottom`
+      position: "right", // `left`, `center` or `right`
+      stopOnFocus: true, // Prevents dismissing of toast on hover
+      style: {
+        background: "linear-gradient(to right, #00b09b, #96c93d)",
+      },
+      onClick: function(){} // Callback after click
+    }).showToast();
+    
 
     if (nuevoValor >= 100) {
       tama[stat] = 100;
-      alert(`${stat} llegó al máximo!`);
+     
+      Swal.fire({
+        icon: 'success',
+        title: 'Yeah!',
+        text: `${stat} llegó al máximo!`,      
+      })
     } else if (nuevoValor <= 0) {
       tama[stat] = 0;
-      alert(`${stat} llegó al mínimo!`);
+     
+      Swal.fire({
+        icon: 'warning',
+        title: 'Oops...',
+        text: `${stat} llegó al mínimo!`,      
+      })
+    
+    
+    
     } else {
       tama[stat] = nuevoValor;
     }
 
-    
-    localStorage.setItem('tamagochi', JSON.stringify(tama));
 
+    localStorage.setItem('tamagochi', JSON.stringify(tama));
+    controlarEstado() 
    
   
   } else {
@@ -405,13 +384,32 @@ function modifStat(oper, cant, stat) {
  
 }
 
-function comprar(precio, descripcion, usos, diversion) {
-  if (tama.dinero < precio) {
-    alert("Dinero Insuficiente");
-  } else {
-    tama.dinero -= precio;
-    let compra = new Juguete(descripcion, usos, diversion);
-    tama.baul.push(compra);
-  }
-}
+function  controlarEstado() {
+  
+  if (tama.saciedad <= 0 || tama.salud <= 0) {
+    
+    Swal.fire({
+    icon: 'error',
+    title: 'Oh noo!',
+    text: tama.nombre + " se Murio X.x",
+    }).then(() => {
+      localStorage.removeItem("tamagochi");
+      tama.vivo = false;
+      setTimeout(function() {
+        window.location.href = '../index.html';
+      }, 1000); 
+    });
 
+  
+       
+    
+  } else if (tama.saciedad <= 25 || tama.humor <= 25 || tama.salud <= 25) {
+    
+    Swal.fire({
+      icon: 'warning',
+      title: 'Esto no se ve bien',
+      text: tama.nombre + " necesita atencion!",
+    })
+  }
+
+}

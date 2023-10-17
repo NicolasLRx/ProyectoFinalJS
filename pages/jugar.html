@@ -16,6 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Pixelify+Sans&family=Rubik:ital,wght@0,400;1,300&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="../CSS/style.css" />
     <title>Playroom</title>
   </head>
@@ -52,9 +53,21 @@
       </div>
       <div class="row">
 
-        <div class = "col" id = "resultado">
-        </div>
+        <div class = "col" id = "eleccion"></div>
+      </div>
+         
+      <div class="row">      
+        <div class = "col" id = "resultado"></div>
+      </div>
         
+
+    
+      <div class="row">      
+        <div class="col">
+        <button type="button" class="btn btn-primary" id="menuPrincipal">
+          Volver
+        </button>
+      </div>
 
       </div>
 
@@ -63,9 +76,7 @@
 
 
 
-      <button type="button" class="btn btn-primary" id="menuPrincipal">
-        Volver
-      </button>
+      
     </div>
 
     <script src="../js/tama.js" defer></script>
@@ -74,5 +85,7 @@
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   </body>
 </html>
