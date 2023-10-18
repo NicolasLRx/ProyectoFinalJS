@@ -18,9 +18,9 @@ class Tamagochi {
     this.humor = 50; // 50 es sin humor, abajo es aburrido, arriba divertido
     this.salud = 50; // 50 es saludable
     this.baul = [];
-    this.dinero = 10; // contado
+    this.dinero = 20; // contado
     this.vivo = true;
-    let pelota = new Juguete(0,"Pelota", Infinity, 5,Infinity);
+    let pelota = new Juguete(0,"Pelota", 9999, 5,false);
     this.baul.push(pelota);
   }
 
@@ -74,6 +74,8 @@ const opcUsuario = document.querySelectorAll(".img-fluid.ppt")
 const jugueteDom = document.getElementById("juguete")
 const btnComprar = document.getElementById("comprarJuguete")
 const eleccionTama = document.getElementById("eleccion")
+const baulDom = document.getElementById("baul")
+
 
 //EVENTOS
 if (nuevo) {
@@ -198,11 +200,13 @@ document.addEventListener("DOMContentLoaded", function () {
   barraDeProgresoSal.querySelector(".progress-bar").style.width = `${nuevoPorcentajeSal}%`;
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+  mostrarJuguetes();
+});
 
-
-
-
-
+document.addEventListener("DOMContentLoaded", function() {
+mostrarBaulDOM() 
+});
 
 //FUNCTIONS
 
@@ -291,14 +295,14 @@ function jugarPpt(opcUser) {
       contG = 0;
     }
     if (contG == 3) {
-      alert(tama.nombre + "Se esta divirtiendo y gano $2 !");
+     
       Swal.fire({
         icon: 'success',
         title: '$$$$$',
-        text: tama.nombre + "Se esta divirtiendo y gano $2 !",
+        text: tama.nombre + "Se esta divirtiendo y gano $10 !",
       })
       modifStat("+", 20, "humor");
-      modifStat("+", 2, "dinero");
+      modifStat("+", 10, "dinero");
       contG = 0;
       contP = 0;
     }
@@ -345,7 +349,7 @@ function modifStat(oper, cant, stat) {
       style: {
         background: "linear-gradient(to right, #00b09b, #96c93d)",
       },
-      onClick: function(){} // Callback after click
+      
     }).showToast();
     
 
@@ -412,4 +416,119 @@ function  controlarEstado() {
     })
   }
 
+}
+
+if (localStorage.getItem("CatalogoJuguete")) {
+  catalogoJuguete = JSON.parse(localStorage.getItem("CatalogoJuguete"));
+} else {
+  const cargarJuguete = async () => {
+    try {
+      const resp = await fetch("../JSON/juguetes.json");
+      const dataJuguete = await resp.json();
+      for (let juguete of dataJuguete) {
+        let jugueteNuevo = new Juguete(
+          juguete.id,
+          juguete.nombre,
+          juguete.duracion,
+          juguete.diversion,
+          juguete.precio
+        );
+        catalogoJuguete.push(jugueteNuevo);
+      }
+      localStorage.setItem("CatalogoJuguete", JSON.stringify(catalogoJuguete));
+    } catch (error) {
+      console.error("Error al cargar y almacenar los datos de juguetes:", error);
+    }
+  };
+  cargarJuguete();
+}
+
+function mostrarJuguetes() {
+  jugueteDom.innerHTML = "";
+
+  for (let jug of catalogoJuguete) {
+    let jugDom = document.createElement("div");
+    jugDom.className = "col-12 col-md-6 col-lg-4 my-2";
+    jugDom.innerHTML = `
+      <div id="${jug.id}" class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h4 class="card-title"></h4>
+          <p>Juguete: ${jug.nombre}</p>
+          <p>Duración: ${jug.duracion}</p>
+          <p>Diversion ${jug.diversion} </p>  
+          <p>Precio: ${jug.precio}</p>
+          <button id="comprarJuguete${jug.id}" class="btn btn-outline-success">Comprar</button>
+        </div>
+        </div>
+    `;
+    jugueteDom.append(jugDom);
+
+    const btnComprar = document.getElementById(`comprarJuguete${jug.id}`);
+    if (btnComprar) {
+      btnComprar.addEventListener("click", function () {
+        comprar(jug);
+      });
+    }
+  }
+}
+
+function comprar(juguete) {
+
+  
+  if (tama.dinero < juguete.precio) {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Seeco!',
+      text: "No tienes dinero suficiente",
+    });
+  } else {
+    // Realizar la compra del juguete
+  modifStat("-",juguete.precio, "dinero")
+    // Agregar el juguete al baul del Tamagotchi
+    tama.baul.push(juguete);
+
+    Swal.fire({
+      icon: 'success',
+      title: '¡Compra exitosa!',
+      text: `Has comprado el juguete ${juguete.nombre}`,
+    });
+
+    // Puedes realizar otras acciones aquí, como actualizar la interfaz de usuario
+  }
+}
+
+
+
+function mostrarBaulDOM() {
+  baulDom.innerHTML = "";
+
+  for (let juguete of tama.baul) {
+    let jugueteDiv = document.createElement("div");
+    jugueteDiv.className = "col-12 col-md-6 col-lg-4 my-2";
+    jugueteDiv.innerHTML = `
+      <div id="${juguete.id}" class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h4 class="card-title"></h4>
+          <p>Nombre: ${juguete.nombre}</p>
+          <p>Usos : ${juguete.duracion}</p>
+          <p>Diversion: ${juguete.diversion} </p>
+          <button id="btnUsar${juguete.id}" class="btn btn-outline-success">Usar</button>
+        </div>
+      </div>
+    `;
+    baulDom.append(jugueteDiv);
+
+    const btnUsar = document.getElementById(`btnUsar${juguete.id}`);
+    btnUsar.addEventListener("click", () => {
+      if (juguete.duracion > 0) {
+        modifStat("+", juguete.diversion, "humor");
+        juguete.duracion--;
+        
+        // Por ejemplo: if (juguete.duracion <= 0) tama.baul = tama.baul.filter(item => item.id !== juguete.id);
+        mostrarBaulDOM(); // Actualiza la vista del baul después de usar el juguete.
+      } else {
+        alert("¡Este juguete ya no tiene usos!");
+      }
+    });
+  }
 }
