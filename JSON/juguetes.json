@@ -2,7 +2,7 @@
     {
         "id": 1,
         "nombre": "Plastilina",
-        "duracion": "1",
+        "duracion": 1,
         "diversion": 3,
         "precio": 1        
     },

@@ -190,14 +190,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const barraDeProgresoSac = document.getElementById("saciedad");
   const barraDeProgresoHum = document.getElementById("humor");
   const barraDeProgresoSal = document.getElementById("salud");
+  const mostrarDinero = document.getElementById("dinero")
 
   const nuevoPorcentajeSac = tama.saciedad;
   const nuevoPorcentajeHum = tama.humor;
   const nuevoPorcentajeSal = tama.salud;
+  const nuevoDinero = tama.dinero;
 
   barraDeProgresoSac.querySelector(".progress-bar").style.width = `${nuevoPorcentajeSac}%`;
   barraDeProgresoHum.querySelector(".progress-bar").style.width = `${nuevoPorcentajeHum}%`;
   barraDeProgresoSal.querySelector(".progress-bar").style.width = `${nuevoPorcentajeSal}%`;
+  mostrarDinero.innerHTML=`DINERO $ ${nuevoDinero}`
 });
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -207,6 +210,32 @@ document.addEventListener("DOMContentLoaded", function() {
 document.addEventListener("DOMContentLoaded", function() {
 mostrarBaulDOM() 
 });
+
+if (localStorage.getItem("CatalogoJuguete")) {
+  catalogoJuguete = JSON.parse(localStorage.getItem("CatalogoJuguete"));
+} else {
+  const cargarJuguete = async () => {
+    try {
+      const resp = await fetch("../JSON/juguetes.json");
+      const dataJuguete = await resp.json();
+      for (let juguete of dataJuguete) {
+        let jugueteNuevo = new Juguete(
+          juguete.id,
+          juguete.nombre,
+          juguete.duracion,
+          juguete.diversion,
+          juguete.precio
+        );
+        catalogoJuguete.push(jugueteNuevo);
+      }
+      localStorage.setItem("CatalogoJuguete", JSON.stringify(catalogoJuguete));
+    } catch (error) {
+      console.error("Error al cargar y almacenar los datos de juguetes:", error);
+    }
+  };
+  cargarJuguete();
+}
+
 
 //FUNCTIONS
 
@@ -418,31 +447,6 @@ function  controlarEstado() {
 
 }
 
-if (localStorage.getItem("CatalogoJuguete")) {
-  catalogoJuguete = JSON.parse(localStorage.getItem("CatalogoJuguete"));
-} else {
-  const cargarJuguete = async () => {
-    try {
-      const resp = await fetch("../JSON/juguetes.json");
-      const dataJuguete = await resp.json();
-      for (let juguete of dataJuguete) {
-        let jugueteNuevo = new Juguete(
-          juguete.id,
-          juguete.nombre,
-          juguete.duracion,
-          juguete.diversion,
-          juguete.precio
-        );
-        catalogoJuguete.push(jugueteNuevo);
-      }
-      localStorage.setItem("CatalogoJuguete", JSON.stringify(catalogoJuguete));
-    } catch (error) {
-      console.error("Error al cargar y almacenar los datos de juguetes:", error);
-    }
-  };
-  cargarJuguete();
-}
-
 function mostrarJuguetes() {
   jugueteDom.innerHTML = "";
 
@@ -472,28 +476,33 @@ function mostrarJuguetes() {
   }
 }
 
-function comprar(juguete) {
+function comprar(jugComprado) {
 
   
-  if (tama.dinero < juguete.precio) {
+  if (tama.dinero < jugComprado.precio) {
     Swal.fire({
       icon: 'error',
       title: '¡Seeco!',
       text: "No tienes dinero suficiente",
     });
   } else {
-    // Realizar la compra del juguete
-  modifStat("-",juguete.precio, "dinero")
-    // Agregar el juguete al baul del Tamagotchi
-    tama.baul.push(juguete);
+      modifStat("-",jugComprado.precio, "dinero")
+      const jugueteExistente = tama.baul.find(item => item.id === jugComprado.id);
+
+      if (jugueteExistente) {
+        jugueteExistente.duracion += jugComprado.duracion;
+      } else {
+             tama.baul.push(jugComprado);
+      }
+  
+
 
     Swal.fire({
       icon: 'success',
       title: '¡Compra exitosa!',
-      text: `Has comprado el juguete ${juguete.nombre}`,
+      text: `Has comprado el juguete ${jugComprado.nombre}`,
     });
-
-    // Puedes realizar otras acciones aquí, como actualizar la interfaz de usuario
+    localStorage.setItem('tamagochi', JSON.stringify(tama));   
   }
 }
 
@@ -520,15 +529,22 @@ function mostrarBaulDOM() {
 
     const btnUsar = document.getElementById(`btnUsar${juguete.id}`);
     btnUsar.addEventListener("click", () => {
-      if (juguete.duracion > 0) {
+      
+      if(juguete.duracion == 0){
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: "El juguete ya no se puede usar",
+        });
+      }else if (juguete.duracion > 0) {
         modifStat("+", juguete.diversion, "humor");
         juguete.duracion--;
         
-        // Por ejemplo: if (juguete.duracion <= 0) tama.baul = tama.baul.filter(item => item.id !== juguete.id);
-        mostrarBaulDOM(); // Actualiza la vista del baul después de usar el juguete.
-      } else {
-        alert("¡Este juguete ya no tiene usos!");
-      }
+        if(juguete.duracion==0){
+          tama.baul = tama.baul.filter(item => item.id !== juguete.id);
+        }
+        mostrarBaulDOM();
+      } 
     });
   }
 }
